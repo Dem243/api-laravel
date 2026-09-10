@@ -5,20 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
-use Illuminate\Http\JsonResponse;
+use App\Traits\ApiResponseTrait;
 
 class ProjectController extends Controller
 {
+    use ApiResponseTrait;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         //
-        return new JsonResponse([
-            'message'=>"Hello World",
-            'name'=>'Muambi'
-        ], 200);
+        return response()->json(Project::all());
     }
 
     /**
@@ -26,14 +24,10 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-      $request->validated($request->all()); 
+        $request->validated($request->all());
 
-      Project::create($request->all());
-      
-      return response()->json([
-        'success'=>true,
-        'message'=>'Projet créé avec succès',
-      ],200);
+        $project = Project::create($request->all());
+        return $this->successResponse($project, 'Projet créé avec succès');
     }
 
     /**
@@ -41,7 +35,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        return response()->json($project);
     }
 
     /**
@@ -49,7 +43,11 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        //
+        $request->validated($request->all());
+
+        $project->update($request->all());
+
+        return $this->successResponse($project, 'Projet modifié avec succès');
     }
 
     /**
@@ -57,6 +55,8 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
+
+        return $this->successResponse(null,'Projet supprimé avec succès');
     }
 }
