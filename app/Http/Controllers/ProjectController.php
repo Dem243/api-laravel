@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use Illuminate\Http\JsonResponse;
 
 class ProjectController extends Controller
 {
@@ -14,6 +15,10 @@ class ProjectController extends Controller
     public function index()
     {
         //
+        return new JsonResponse([
+            'message'=>"Hello World",
+            'name'=>'Muambi'
+        ], 200);
     }
 
     /**
@@ -21,7 +26,14 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        //
+      $request->validated($request->all()); 
+
+      Project::create($request->all());
+      
+      return response()->json([
+        'success'=>true,
+        'message'=>'Projet créé avec succès',
+      ],200);
     }
 
     /**
