@@ -43,11 +43,12 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        $request->validated($request->all());
+        $project->update($request->validated());
 
-        $project->update($request->all());
-
-        return $this->successResponse($project, 'Projet modifié avec succès');
+        return $this->successResponse(
+            $project,
+            'Projet modifié avec succès'
+        );
     }
 
     /**
@@ -56,7 +57,6 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
-
-        return $this->successResponse(null,'Projet supprimé avec succès');
+        return response()->json(['message' => 'Projet supprimé avec succès']);
     }
 }

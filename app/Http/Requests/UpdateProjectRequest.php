@@ -19,11 +19,16 @@ class UpdateProjectRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
+    // sometimes pour si le champs de name soit là que ça puisse n'est pas être nul
     public function rules(): array
     {
         return [
-            'name'=>['string','required', 'max:255'],
-            'description'=>['string','nullable']
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'description' => ['sometimes', 'nullable', 'string'],
+            'start_date' => ['sometimes', 'nullable', 'date'],
+            'end_date' => ['sometimes', 'nullable', 'date'],
+            'rate' => ['sometimes', 'integer'],
         ];
     }
 }
