@@ -6,6 +6,8 @@ use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Traits\ApiResponseTrait;
+use Illuminate\Http\Client\Request as ClientRequest;
+use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
@@ -74,6 +76,28 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
-        return response()->json(['message' => 'Projet supprimé avec succès']);
+        return response()->json(['success' => true, 'message' => 'Projet supprimé avec succès']);
+    }
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        if (trim($keyword) == '') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Veuillez entrer un mot-clé pour effectuer la recherche'
+            ]);
+        }
+
+        $projects = Project::where('name', 'like', "%$keyword%")->get();
+
+        if ($projects->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => "Aucune correspondance trouvée pour votre recherche : $keyword"
+            ]);
+        }
+
+        return response()->json($projects);
     }
 }

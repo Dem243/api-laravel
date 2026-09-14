@@ -20,3 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('/project', ProjectController::class);
+
+Route::post('/project/search', [ProjectController::class, 'search']);
