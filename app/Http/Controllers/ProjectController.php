@@ -15,8 +15,25 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
-        return response()->json(Project::all());
+
+        //-----------------------------------Filtre----------------------------------------------
+        //Récupérer tous les projet supérieur au 11-septembre
+        // $project= Project::whereDate('start_date','>','2026-09-11')->get();
+
+        //Récupérer tous les projet inferieur au 13-septembre
+        // $project= Project::whereDate('start_date','<','2026-09-13')->get();
+        //Récupérer tous les projet egale au 13-septembre
+        //$project = Project::whereDate('start_date', '=', '2026-09-13')->get();
+        //Récupérer tous les projet à l'interval de deux dates précises
+        /* $project = Project::whereBetween('start_date', ['2026-09-11','2026-09-13'])->orWhereBetween('end_date',['2026-09-11','2026-09-13'])->get();
+ */
+
+        //----------------------------------Trie-----------------------------------------------
+        // Le projet les plus récent DESC, ASC Le moins récent 
+        // $project=Project::orderBy('rate','DESC')->orderBy('start_date', 'DESC')->get();
+
+        $project = Project::orderBy('rate', 'DESC')->orderBy('name', 'ASC')->get();
+        return response()->json($project);
     }
 
     /**

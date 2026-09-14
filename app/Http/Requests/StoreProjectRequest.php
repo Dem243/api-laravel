@@ -23,7 +23,11 @@ class StoreProjectRequest extends FormRequest
     {
         return [
             'name'=>['string','required', 'max:255'],
-            'description'=>['string','nullable']
+            'description'=>['string','nullable'],
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date'],
+            'rate' => ['nullable','integer'],
         ];
+        
     }
 }
