@@ -34,8 +34,11 @@ class ProjectController extends Controller
         // Le projet les plus récent DESC, ASC Le moins récent 
         // $project=Project::orderBy('rate','DESC')->orderBy('start_date', 'DESC')->get();
 
-        $project = Project::orderBy('rate', 'DESC')->orderBy('name', 'ASC')->get();
-        return response()->json($project);
+       // $project = Project::orderBy('rate', 'DESC')->orderBy('name', 'ASC')->get();
+        
+       // Pagination
+       $projects= Project::paginate(3);
+       return response()->json($projects);
     }
 
     /**
