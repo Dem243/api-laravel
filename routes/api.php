@@ -19,10 +19,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+// Privé
+Route::apiResource('/project', ProjectController::class)->middleware('auth:sanctum');
 
-Route::apiResource('/project', ProjectController::class);
+Route::post('/project/search', [ProjectController::class, 'search'])->middleware('auth:sanctum');
 
-Route::post('/project/search', [ProjectController::class, 'search']);
-
-// Authentification
+// Authentification Public
 Route::post('/register', [AuthController::class,'register']);
+
+Route::post('/login', [AuthController::class,'login']);

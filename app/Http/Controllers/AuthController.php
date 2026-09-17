@@ -30,4 +30,23 @@ class AuthController extends Controller
 
         return $this->successResponse(['user' => $user, 'token' => $token], 'Inscription effectué avec succès');
     }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || ! Hash::check($request->password, $user->password)) {
+            return $this->errorResponse('Email ou mot de passe incorrecte');
+        }
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return $this->successResponse([
+            'user' => $user,
+            'token' => $token,
+        ], 'Authentification réussi');
+    }
 }

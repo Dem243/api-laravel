@@ -15,7 +15,7 @@ trait ApiResponseTrait
     }
     protected function errorResponse($message = null, $code = Response::HTTP_BAD_REQUEST) {
           return response()->json([
-            'success'=>true,
+            'success'=>false,
             'message'=>$message
           ], $code);
     }
