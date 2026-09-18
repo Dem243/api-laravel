@@ -37,7 +37,7 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->with('projects')->first();
 
         if (!$user || ! Hash::check($request->password, $user->password)) {
             return $this->errorResponse('Email ou mot de passe incorrecte');

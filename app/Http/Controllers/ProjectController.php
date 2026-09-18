@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -37,7 +38,11 @@ class ProjectController extends Controller
        // $project = Project::orderBy('rate', 'DESC')->orderBy('name', 'ASC')->get();
         
        // Pagination
-       $projects= Project::paginate(3);
+       //$projects= Project::paginate(3);
+       
+       // En fonction de l'utilisateur
+       $projects= Project::where('user_id', Auth::user()->id)->get();
+
        return response()->json($projects);
     }
 
@@ -48,7 +53,15 @@ class ProjectController extends Controller
     {
         $request->validated($request->all());
 
-        $project = Project::create($request->all());
+        $project = Project::create([
+            'name'=> $request->name,
+            'description'=> $request->description,
+            'start_date'=> $request->start_date,
+            'end_date'=> $request->end_date,
+            'rate'=> $request->rate,
+            'user_id'=> Auth::user()->id
+        ]);
+        
         return $this->successResponse($project, 'Projet créé avec succès');
     }
 
@@ -103,4 +116,5 @@ class ProjectController extends Controller
 
         return response()->json($projects);
     }
+
 }
