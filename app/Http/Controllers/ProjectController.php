@@ -9,6 +9,7 @@ use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectController extends Controller
 {
@@ -35,15 +36,15 @@ class ProjectController extends Controller
         // Le projet les plus récent DESC, ASC Le moins récent 
         // $project=Project::orderBy('rate','DESC')->orderBy('start_date', 'DESC')->get();
 
-       // $project = Project::orderBy('rate', 'DESC')->orderBy('name', 'ASC')->get();
-        
-       // Pagination
-       //$projects= Project::paginate(3);
-       
-       // En fonction de l'utilisateur
-       $projects= Project::where('user_id', Auth::user()->id)->get();
+        // $project = Project::orderBy('rate', 'DESC')->orderBy('name', 'ASC')->get();
 
-       return response()->json($projects);
+        // Pagination
+        //$projects= Project::paginate(3);
+
+        // En fonction de l'utilisateur
+        $projects = Project::where('user_id', Auth::user()->id)->get();
+
+        return response()->json($projects);
     }
 
     /**
@@ -54,14 +55,14 @@ class ProjectController extends Controller
         $request->validated($request->all());
 
         $project = Project::create([
-            'name'=> $request->name,
-            'description'=> $request->description,
-            'start_date'=> $request->start_date,
-            'end_date'=> $request->end_date,
-            'rate'=> $request->rate,
-            'user_id'=> Auth::user()->id
+            'name' => $request->name,
+            'description' => $request->description,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'rate' => $request->rate,
+            'user_id' => Auth::user()->id
         ]);
-        
+
         return $this->successResponse($project, 'Projet créé avec succès');
     }
 
@@ -70,6 +71,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        if (!Gate::allows('access', $project)) {
+            return $this->unauthorizedResponse("Vous êtes pas autorisé à cette ressource ");
+        }
         return response()->json($project);
     }
 
@@ -78,6 +82,9 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
+        if (!Gate::allows('access', $project)) {
+            return $this->unauthorizedResponse("Vous êtes pas autorisé à cette ressource ");
+        }
         $project->update($request->validated());
 
         return $this->successResponse(
@@ -91,6 +98,9 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        if (!Gate::allows('access', $project)) {
+            return $this->unauthorizedResponse("Vous êtes pas autorisé à cette ressource ");
+        }
         $project->delete();
         return response()->json(['success' => true, 'message' => 'Projet supprimé avec succès']);
     }
@@ -116,5 +126,4 @@ class ProjectController extends Controller
 
         return response()->json($projects);
     }
-
 }
