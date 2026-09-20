@@ -15,9 +15,9 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Project $project)
     {
-        //
+        return response()->json($project->tasks);
     }
 
     /**
@@ -30,30 +30,43 @@ class TaskController extends Controller
 
         $project->tasks()->save($task);
 
-        return $this->successResponse($task, 'Taches créés avec succés');
+        return $this->successResponse($task, 'Taches créé avec succés');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(UpdateTaskRequest $task)
+    public function show(Project $project, Task $task)
     {
-        //
+        if ($task->project_id != $project->id) {
+            return $this->errorResponse("Cette tache n'appartient pas à ce projet");
+        };
+        return response()->json($task);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(UpdateTaskRequest $request, Project $project, Task $task)
     {
-        //
+        if ($task->project_id != $project->id) {
+            return $this->errorResponse("Cette tache n'appartient pas à ce projet");
+        };
+
+        $task->update($request->validated());
+
+        return $this->successResponse($task, 'Taches modifié avec succés');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(Project $project, Task $task)
     {
-        //
+        if ($task->project_id != $project->id) {
+            return $this->errorResponse("Cette tache n'appartient pas à ce projet");
+        };
+        $task->delete();
+        return response()->json("Tache supprimé avec succès!");
     }
 }
