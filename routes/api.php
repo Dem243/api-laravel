@@ -25,7 +25,7 @@ Route::apiResource('/project', ProjectController::class)->middleware('auth:sanct
 
 Route::post('/project/search', [ProjectController::class, 'search'])->middleware('auth:sanctum');
 
-Route::apiResource('/task', TaskController::class)->middleware('auth:sanctum');
+Route::apiResource('project.task', TaskController::class)->middleware('auth:sanctum');
 
 // Authentification Public
 Route::post('/register', [AuthController::class,'register']);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Models\Project;
 use App\Models\Task;
 use App\Traits\ApiResponseTrait;
 use Illuminate\Http\Request;
@@ -22,10 +23,12 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTaskRequest $request)
+    public function store(StoreTaskRequest $request, Project $project)
     {
 
-        $task = Task::create($request->validated());
+        $task = new Task($request->all());
+
+        $project->tasks()->save($task);
 
         return $this->successResponse($task, 'Taches créés avec succés');
     }

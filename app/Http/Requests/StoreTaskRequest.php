@@ -23,8 +23,7 @@ class StoreTaskRequest extends FormRequest
     {
         return [
             'name'=>['required', 'string'],
-            'description'=>['nullable'], 
-            'project_id'=>['required'],          
+            'description'=>['nullable']      
         ];
     }
 }
