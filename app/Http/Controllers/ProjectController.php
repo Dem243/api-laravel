@@ -6,7 +6,6 @@ use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Traits\ApiResponseTrait;
-use Illuminate\Http\Client\Request as ClientRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -71,9 +70,13 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        if (!Gate::allows('access', $project)) {
+        /* if (!Gate::allows('access', $project)) {
             return $this->unauthorizedResponse("Vous êtes pas autorisé à cette ressource ");
-        }
+        } */
+        if (Auth::user()->cannot('view', $project)) {
+            return $this->unauthorizedResponse("Vous êtes pas autorisé à cette ressource ");
+        };
+
         return response()->json($project);
     }
 

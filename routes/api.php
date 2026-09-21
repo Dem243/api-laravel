@@ -17,17 +17,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Routes Privée
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::apiResource('/project', ProjectController::class);
+
+    Route::post('/project/search', [
+        ProjectController::class,
+        'search'
+    ]);
+
+    Route::apiResource('project.task', TaskController::class);
 });
-// Privé
-Route::apiResource('/project', ProjectController::class)->middleware('auth:sanctum');
+// Routes Publique
+Route::post('/register', [AuthController::class, 'register']);
 
-Route::post('/project/search', [ProjectController::class, 'search'])->middleware('auth:sanctum');
-
-Route::apiResource('project.task', TaskController::class)->middleware('auth:sanctum');
-
-// Authentification Public
-Route::post('/register', [AuthController::class,'register']);
-
-Route::post('/login', [AuthController::class,'login']);
+Route::post('/login', [AuthController::class, 'login']);
