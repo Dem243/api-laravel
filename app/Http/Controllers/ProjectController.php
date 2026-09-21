@@ -51,12 +51,12 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        $request->validated($request->all());
+        $request->validated();
 
-        $image = $request->image;
+        $image = null;
 
-        if ($image != null && !$image->getError()) {
-            $image = $request->image->store('asset','public');
+        if ($request->hasFile('image') && $request->file('image')->isValid()) {
+            $image = $request->file('image')->store('asset', 'public');
         }
 
         $project = Project::create([
@@ -65,11 +65,14 @@ class ProjectController extends Controller
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'rate' => $request->rate,
-            'image'=>$image,
-            'user_id' => Auth::user()->id
+            'image' => $image,
+            'user_id' => Auth::id()
         ]);
 
-        return $this->successResponse($project, 'Projet créé avec succès');
+        return $this->successResponse(
+            $project,
+            'Projet créé avec succès'
+        );
     }
 
     /**
