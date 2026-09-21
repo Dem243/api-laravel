@@ -53,12 +53,19 @@ class ProjectController extends Controller
     {
         $request->validated($request->all());
 
+        $image = $request->image;
+
+        if ($image != null && !$image->getError()) {
+            $image = $request->image->store('asset','public');
+        }
+
         $project = Project::create([
             'name' => $request->name,
             'description' => $request->description,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'rate' => $request->rate,
+            'image'=>$image,
             'user_id' => Auth::user()->id
         ]);
 

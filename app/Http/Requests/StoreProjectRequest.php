@@ -21,12 +21,15 @@ class StoreProjectRequest extends FormRequest
      */
     public function rules(): array
     {
+        
+
         return [
             'name'=>['string','required', 'max:255'],
             'description'=>['string','nullable'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date'],
             'rate' => ['nullable','integer'],
+            'image'=>['nullable','image', 'mimes:png,jpg,jpeg', 'max:2048']
         ];
         
     }
